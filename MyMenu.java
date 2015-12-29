@@ -9,6 +9,7 @@ import java.util.regex.MatchResult;
 public class MyMenu {
 
     Scanner sc;
+    boolean isLogin = false;
 
     public void run(){
 
@@ -17,11 +18,15 @@ public class MyMenu {
         sc = new Scanner(System.in);
         String cmd = "";
 
-        while(!cmd.equals("quit") || !cmd.equals("exit")){
+        while(!cmd.equals("quit") && !cmd.equals("exit")){
 
             System.out.println("0. help");
+
             if(cmd.equals("0")){
                 help();
+            }
+            if(cmd.equals("list")){
+                cmdList();
             }
 
             login();
@@ -46,27 +51,39 @@ public class MyMenu {
     }
 
     public void help(){
-        System.out.println(
-                "-list   :show all tables\n "+
-                        "");
+        System.out.println("\n"+
+                "-list          :show all tables\n "+
+                "-quit || exit  : disconnect and quit program" +
+                        "\n");
+    }
+
+    public void cmdList(){
+        System.out.println("command List");
+        sc.next();
     }
 
     public void login(){
-        System.out.print("enter login: ");
-        //String userLogin = sc.nextLine();
-
-        sc.findInLine("(\\D)");
-        try {
-            MatchResult result = sc.match();
-            String userLogin = result.group(0);
 
 
+        while (isLogin == false){
+            System.out.print("enter login: ");
+            sc.findInLine("(\\S)");
 
-        }catch (IllegalStateException ex){
-            System.out.println("invalid login");
+            try {
+                MatchResult result = sc.match();
+                String userLogin = result.group(0);
+
+            }catch (IllegalStateException ex){
+                System.out.println("invalid symbols");
+                sc.nextLine();
+                continue;
+            }
+
+            System.out.print("enter password: ");
+
+            isLogin = true;
+
+            break;
         }
-
-        System.out.print("enter password: ");
-        String userPass = sc.nextLine();
     }
 }
